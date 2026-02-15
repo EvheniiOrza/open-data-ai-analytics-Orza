@@ -4,3 +4,4 @@
 **License:** Creative Commons Attribution 4.0.
 
 ## Аналіз: Використовуємо Jupyter Notebook.
+## Дані: Отримано з державного порталу.
