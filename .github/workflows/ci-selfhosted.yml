@@ -42,9 +42,11 @@ jobs:
 
             jupyter nbconvert --to notebook --execute "notebooks/${{ matrix.module }}.ipynb"
             elif [ -f "notebooks/${{ matrix.module }}.ipynb.py" ]; then
-
-              python3 "notebooks/${{ matrix.module }}.ipynb.py"
-            fi
+            # Заходимо в папку notebooks, запускаємо скрипт, і повертаємось
+            cd notebooks
+            python3 "${{ matrix.module }}.ipynb.py"
+            cd ..
+          fi
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
