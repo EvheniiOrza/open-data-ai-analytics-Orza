@@ -22,6 +22,8 @@ jobs:
 
       - name: Set up Python
         uses: actions/setup-python@v5
+        env:
+          RUNNER_TOOL_CACHE: /Users/mac/open-data-ai-analytics-Orza/actions-runner/_work/_tool
         with:
           python-version: "3.11"
 
