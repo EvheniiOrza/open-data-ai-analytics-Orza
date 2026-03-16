@@ -24,32 +24,32 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Перебираємо твої файли з папки notebooks (без розширень)
         module: [01_quality_check, 02_research, 03_viz]
-
-    if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.module == 'all' || github.event.inputs.module == matrix.module }}
 
     steps:
       - name: Checkout repository
+        # Перенесли if сюди, на кожен крок
+        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.module == 'all' || github.event.inputs.module == matrix.module }}
         uses: actions/checkout@v4
 
       - name: Set up Python
+        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.module == 'all' || github.event.inputs.module == matrix.module }}
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
       - name: Install dependencies
+        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.module == 'all' || github.event.inputs.module == matrix.module }}
         run: |
           python -m pip install --upgrade pip
-          # Встановлюємо pandas для твого коду та nbconvert для запуску .ipynb в консолі
           pip install pandas jupyter nbconvert
 
       - name: Run analysis files
+        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.module == 'all' || github.event.inputs.module == matrix.module }}
         run: |
           mkdir -p artifacts/${{ matrix.module }}
           echo "Запускаємо ${{ matrix.module }}..."
           
-          # Логіка запуску: якщо це .ipynb - виконуємо через nbconvert, якщо .py - через python
           if [ -f "notebooks/${{ matrix.module }}.ipynb" ]; then
             jupyter nbconvert --to notebook --execute "notebooks/${{ matrix.module }}.ipynb" --output-dir "artifacts/${{ matrix.module }}"
           elif [ -f "notebooks/${{ matrix.module }}.ipynb.py" ]; then
@@ -59,6 +59,7 @@ jobs:
           fi
 
       - name: Upload artifacts
+        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.module == 'all' || github.event.inputs.module == matrix.module }}
         uses: actions/upload-artifact@v4
         with:
           name: artifacts-${{ matrix.module }}
