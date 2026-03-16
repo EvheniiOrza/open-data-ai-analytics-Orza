@@ -22,6 +22,8 @@ jobs:
 
       - name: Set up Python
         uses: actions/setup-python@v5
+        env:
+          RUNNER_TOOL_CACHE: /Users/mac/open-data-ai-analytics-Orza/actions-runner/_work/_tool
         with:
           python-version: "3.11"
 
@@ -32,8 +34,18 @@ jobs:
 
       - name: Copy local big dataset
         run: |
-          mkdir -p data
-          cp /Users/mac/open-data-ai-analytics-Orza/data/reestrtz28.02.2026.csv data/
+            echo "1. Поточна робоча папка ранера:"
+            pwd
+            
+            echo "2. Чи бачить ранер оригінальний файл на Mac?"
+            ls -lh /Users/mac/open-data-ai-analytics-Orza/data/reestrtz28.02.2026.csv || echo "ОРИГІНАЛЬНИЙ ФАЙЛ НЕ ЗНАЙДЕНО!"
+            
+            echo "3. Створюю папку і копіюю..."
+            mkdir -p data
+            cp /Users/mac/open-data-ai-analytics-Orza/data/reestrtz28.02.2026.csv data/
+            
+            echo "4. Що тепер лежить у папці data всередині ранера?"
+            ls -lh data/
 
       - name: Run analysis files
         run: |
