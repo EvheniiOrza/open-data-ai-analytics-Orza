@@ -9,7 +9,7 @@ on:
 
 jobs:
   run-local:
-    runs-on: self-hosted # Вказуємо твій локальний ранер
+    runs-on: self-hosted
 
     strategy:
       fail-fast: false
@@ -19,26 +19,19 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        
+
+      # Крок "Set up Python" повністю видалено — використовуємо системний Python3
+
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install pandas jupyter nbconvert matplotlib
+          # Використовуємо python3 та pip3
+          python3 -m pip install --upgrade pip
+          pip3 install pandas jupyter nbconvert matplotlib
 
       - name: Copy local big dataset
         run: |
-            echo "1. Поточна робоча папка ранера:"
-            pwd
-            
-            echo "2. Чи бачить ранер оригінальний файл на Mac?"
-            ls -lh /Users/mac/open-data-ai-analytics-Orza/data/reestrtz28.02.2026.csv || echo "ОРИГІНАЛЬНИЙ ФАЙЛ НЕ ЗНАЙДЕНО!"
-            
-            echo "3. Створюю папку і копіюю..."
-            mkdir -p data
-            cp /Users/mac/open-data-ai-analytics-Orza/data/reestrtz28.02.2026.csv data/
-            
-            echo "4. Що тепер лежить у папці data всередині ранера?"
-            ls -lh data/
+          mkdir -p data
+          cp /Users/mac/open-data-ai-analytics-Orza/data/reestrtz28.02.2026.csv data/
 
       - name: Run analysis files
         run: |
@@ -48,7 +41,8 @@ jobs:
           if [ -f "notebooks/${{ matrix.module }}.ipynb" ]; then
             jupyter nbconvert --to notebook --execute "notebooks/${{ matrix.module }}.ipynb" --output-dir "artifacts/${{ matrix.module }}"
           elif [ -f "notebooks/${{ matrix.module }}.ipynb.py" ]; then
-            python "notebooks/${{ matrix.module }}.ipynb.py" > "artifacts/${{ matrix.module }}/run.log" 2>&1
+            # Використовуємо python3
+            python3 "notebooks/${{ matrix.module }}.ipynb.py" > "artifacts/${{ matrix.module }}/run.log" 2>&1
           fi
 
       - name: Upload artifacts
