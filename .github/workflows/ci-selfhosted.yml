@@ -37,13 +37,14 @@ jobs:
         run: |
           mkdir -p artifacts/${{ matrix.module }}
           echo "Запускаємо ${{ matrix.module }}..."
-          
+            
           if [ -f "notebooks/${{ matrix.module }}.ipynb" ]; then
-            jupyter nbconvert --to notebook --execute "notebooks/${{ matrix.module }}.ipynb" --output-dir "artifacts/${{ matrix.module }}"
-          elif [ -f "notebooks/${{ matrix.module }}.ipynb.py" ]; then
-            # Використовуємо python3
-            python3 "notebooks/${{ matrix.module }}.ipynb.py" > "artifacts/${{ matrix.module }}/run.log" 2>&1
-          fi
+
+            jupyter nbconvert --to notebook --execute "notebooks/${{ matrix.module }}.ipynb"
+            elif [ -f "notebooks/${{ matrix.module }}.ipynb.py" ]; then
+
+              python3 "notebooks/${{ matrix.module }}.ipynb.py"
+            fi
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
