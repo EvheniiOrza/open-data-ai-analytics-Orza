@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
       - name: web-app
-        image: orzayevhenii/web-app:latest
+        image: nginx:latest
         ports:
-        - containerPort: 8501
+        - containerPort: 80

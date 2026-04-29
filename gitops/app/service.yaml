@@ -8,7 +8,7 @@ spec:
   selector:
     app: web-app
   ports:
-    - protocol: Tcp
+    - protocol: TCP
       port: 80
-      targetPort: 8501
+      targetPort: 80
       nodePort: 30080
