@@ -6,7 +6,7 @@ variable "resource_group_location" {
 
 variable "resource_prefix" {
   type        = string
-  default     = "orza-lab"
+  default     = "orza-lab-v2"
   description = "Префікс для назв ресурсів."
 }
 
