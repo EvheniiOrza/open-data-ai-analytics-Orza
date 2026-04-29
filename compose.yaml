@@ -1,0 +1,89 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: analytics_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d analytics"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  data_load:
+    build: ./data_load
+    container_name: analytics_data_load
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./data:/app/data
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+    networks:
+      - app_network
+
+  data_quality:
+    build: ./data_quality_analysis
+    container_name: analytics_data_quality
+    depends_on:
+      data_load:
+        condition: service_completed_successfully
+    volumes:
+      - ./reports:/app/reports
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+    networks:
+      - app_network
+
+  data_research:
+    build: ./data_research
+    container_name: analytics_data_research
+    depends_on:
+      data_quality:
+        condition: service_completed_successfully
+    volumes:
+      - ./reports:/app/reports
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+    networks:
+      - app_network
+
+  visualization:
+    build: ./visualization
+    container_name: analytics_visualization
+    depends_on:
+      data_research:
+        condition: service_completed_successfully
+    volumes:
+      - ./reports:/app/reports
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+    networks:
+      - app_network
+
+  web:
+    build: ./web
+    container_name: analytics_web
+    ports:
+      - "8501:8501"
+    depends_on:
+      visualization:
+        condition: service_completed_successfully
+    volumes:
+      - ./reports:/app/reports
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
