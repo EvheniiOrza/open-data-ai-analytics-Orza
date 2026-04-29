@@ -29,5 +29,8 @@ runcmd:
   - echo "POSTGRES_DB=analytics" >> .env
   - echo "DATABASE_URL=postgresql://admin:password123@db:5432/analytics" >> .env
   
-  # Запуск ВАШОГО проекту
-  - docker compose up -d --build
+  # Створення мережі, якщо вона ще не створена
+  - docker network create app_network || true
+  
+  # Запуск ВАШОГО проекту та моніторингу
+  - docker compose -f compose.yaml -f monitoring/docker-compose.monitoring.yml up -d --build
