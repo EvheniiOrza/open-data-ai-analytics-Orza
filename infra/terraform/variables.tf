@@ -6,13 +6,13 @@ variable "resource_group_location" {
 
 variable "resource_prefix" {
   type        = string
-  default     = "orza-lab-v5"
+  default     = "orza-lab-v6"
   description = "Префікс для назв ресурсів."
 }
 
 variable "vm_size" {
   type        = string
-  default     = "Standard_D2ls_v5"
+  default     = "Standard_DC1ds_v3"
   description = "Розмір віртуальної машини."
 }
 
