@@ -1,0 +1,24 @@
+#cloud-config
+package_upgrade: true
+
+packages:
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - gnupg
+  - lsb-release
+  - git
+  - docker.io
+  - docker-compose-v2
+
+runcmd:
+  # Налаштування Docker
+  - systemctl start docker
+  - systemctl enable docker
+  - usermod -aG docker azureuser
+  
+  # Клонування репозиторію та запуск
+  - mkdir -p /home/azureuser/app
+  - git clone https://github.com/docker/awesome-compose.git /home/azureuser/awesome-compose
+  - cd /home/azureuser/awesome-compose/nginx-flask-mysql
+  - docker compose up -d
