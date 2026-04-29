@@ -93,7 +93,13 @@ resource "azurerm_network_interface_security_group_association" "example" {
   network_security_group_id = azurerm_network_security_group.nsg.id
 }
 
-# 6. Linux Virtual Machine
+# 6. Generate SSH Key Pair
+resource "tls_private_key" "ssh_key" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+# 7. Linux Virtual Machine
 resource "azurerm_linux_virtual_machine" "vm" {
   name                = "${var.resource_prefix}-vm"
   resource_group_name  = azurerm_resource_group.rg.name
@@ -106,7 +112,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
 
   admin_ssh_key {
     username   = var.admin_username
-    public_key = file(pathexpand("~/.ssh/id_rsa.pub"))
+    public_key = tls_private_key.ssh_key.public_key_openssh
   }
 
   os_disk {
