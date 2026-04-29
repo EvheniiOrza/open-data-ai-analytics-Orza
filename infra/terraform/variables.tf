@@ -1,18 +1,18 @@
 variable "resource_group_location" {
   type        = string
-  default     = "northeurope"
+  default     = "swedencentral"
   description = "Локація для всіх ресурсів у Azure."
 }
 
 variable "resource_prefix" {
   type        = string
-  default     = "orza-lab-v2"
+  default     = "orza-lab-v3"
   description = "Префікс для назв ресурсів."
 }
 
 variable "vm_size" {
   type        = string
-  default     = "Standard_B1ms"
+  default     = "Standard_B2s"
   description = "Розмір віртуальної машини."
 }
 
