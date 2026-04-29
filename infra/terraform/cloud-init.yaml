@@ -17,8 +17,17 @@ runcmd:
   - systemctl enable docker
   - usermod -aG docker azureuser
   
-  # Клонування репозиторію та запуск
+  # Підготовка директорії та клонування ВАШОГО репозиторію
   - mkdir -p /home/azureuser/app
-  - git clone https://github.com/docker/awesome-compose.git /home/azureuser/awesome-compose
-  - cd /home/azureuser/awesome-compose/nginx-flask-mysql
-  - docker compose up -d
+  # ПРИМІТКА: Замініть URL нижче на ваш реальний GitHub URL після створення репозиторію
+  - git clone https://github.com/EvheniiOrza/open-data-ai-analytics-Orza.git /home/azureuser/app
+  - cd /home/azureuser/app
+  
+  # Створення файлу .env для вашого compose.yaml
+  - echo "POSTGRES_USER=admin" > .env
+  - echo "POSTGRES_PASSWORD=password123" >> .env
+  - echo "POSTGRES_DB=analytics" >> .env
+  - echo "DATABASE_URL=postgresql://admin:password123@db:5432/analytics" >> .env
+  
+  # Запуск ВАШОГО проекту
+  - docker compose up -d --build
