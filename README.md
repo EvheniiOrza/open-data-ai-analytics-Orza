@@ -1,53 +1,46 @@
-# Розгортання Docker-інфраструктури в Azure за допомогою Terraform
+# Open Data AI Analytics - Infrastructure & Deployment
 
-Цей проєкт автоматизує створення віртуальної машини в Azure та розгортання веб-додатку (Nginx + Flask + MySQL) через Docker Compose.
+Цей репозиторій містить Docker-проект для аналітики даних та інфраструктурний код Terraform для автоматичного розгортання в Azure.
 
-## Попередня підготовка
+## Структура репозиторію
+- `/web`, `/data_load`, `/visualization` — сервіси Docker-проекту.
+- `/infra/terraform/` — конфігураційні файли Terraform.
+- `compose.yaml` — файл для оркестрації контейнерів.
 
-Перед початком переконайтеся, що у вас згенеровано SSH-ключ:
+## Інструкція для розгортання через Azure Cloud Shell
+
+### 1. Підготовка
+1. Увійдіть у [Azure Portal](https://portal.azure.com).
+2. Відкрийте **Cloud Shell** (іконка `>_` вгорі), оберіть **Bash**.
+3. Клонуйте цей репозиторій:
+   ```bash
+   git clone https://github.com/YOUR_GITHUB_USERNAME/open-data-ai-analytics-Orza.git
+   cd open-data-ai-analytics-Orza/infra/terraform/
+   ```
+
+### 2. Розгортання інфраструктури
+Виконайте наступні команди:
 ```bash
-ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa
+# Ініціалізація провайдерів
+terraform init
+
+# Перевірка плану розгортання
+terraform plan
+
+# Застосування (створення ресурсів)
+terraform apply -auto-approve
 ```
 
-## Інструкція з розгортання
+### 3. Перевірка результату
+- Після завершення (3-5 хв) Terraform виведе `public_ip_address`.
+- Перейдіть за адресою: `http://<PUBLIC_IP>:8501` (для Streamlit) або `http://<PUBLIC_IP>` (якщо налаштований Nginx).
+- Для перевірки через термінал: `curl http://<PUBLIC_IP>:8501`.
 
-1.  **Відкрийте Azure Cloud Shell** (або термінал з встановленим Azure CLI та Terraform).
-2.  **Клонуйте проєкт та перейдіть у робочу директорію**:
-    ```bash
-    git clone <url-вашого-репозиторію>
-    cd project/infra/terraform/
-    ```
-3.  **Ініціалізуйте Terraform**:
-    ```bash
-    terraform init
-    ```
-4.  **Перевірте конфігурацію**:
-    ```bash
-    terraform fmt
-    terraform validate
-    terraform plan
-    ```
-5.  **Застосуйте зміни**:
-    ```bash
-    terraform apply -auto-approve
-    ```
-    *Зачекайте 3-5 хвилин, поки Azure створить ресурси, а cloud-init встановить Docker та запустить контейнери.*
-
-## Перевірка результату
-
-1.  Отримайте публічну IP-адресу з виводу Terraform:
-    ```bash
-    terraform output public_ip_address
-    ```
-2.  **Перевірка через браузер**: Відкрийте `http://<PUBLIC_IP>`.
-3.  **Перевірка через термінал**:
-    ```bash
-    curl http://$(terraform output -raw public_ip_address)
-    ```
-
-## Видалення ресурсів
-
-Щоб не витрачати кошти після завершення роботи:
+### 4. Видалення ресурсів
+Щоб уникнути зайвих витрат, видаліть інфраструктуру після перевірки:
 ```bash
 terraform destroy -auto-approve
 ```
+
+---
+**Розробив:** Орза Євгеній Сергійович, студент групи ШІ-33.
