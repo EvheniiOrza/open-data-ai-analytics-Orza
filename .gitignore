@@ -9,7 +9,7 @@ __pycache__/
 
 # C extensions
 *.so
-
+.zip
 # Distribution / packaging
 .Python
 build/
@@ -214,3 +214,5 @@ __marimo__/
 
 
 .env
+
+data/*.csv

@@ -1,0 +1,55 @@
+name: CI (Self-Hosted Analytics)
+
+on:
+  workflow_dispatch:
+    inputs:
+      module:
+        description: "Який файл запустити"
+        default: "all"
+
+jobs:
+  run-local:
+    runs-on: self-hosted
+
+    strategy:
+      fail-fast: false
+      matrix:
+        module: [01_quality_check, 02_research, 03_viz]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Крок "Set up Python" повністю видалено — використовуємо системний Python3
+
+      - name: Install dependencies
+        run: |
+          # Використовуємо python3 та pip3
+          python3 -m pip install --upgrade pip
+          pip3 install pandas jupyter nbconvert matplotlib
+
+      - name: Copy local big dataset
+        run: |
+          mkdir -p data
+          cp /Users/mac/open-data-ai-analytics-Orza/data/reestrtz28.02.2026.csv data/
+
+      - name: Run analysis files
+        run: |
+          mkdir -p artifacts/${{ matrix.module }}
+          echo "Запускаємо ${{ matrix.module }}..."
+            
+          if [ -f "notebooks/${{ matrix.module }}.ipynb" ]; then
+
+            jupyter nbconvert --to notebook --execute "notebooks/${{ matrix.module }}.ipynb"
+            elif [ -f "notebooks/${{ matrix.module }}.ipynb.py" ]; then
+            # Заходимо в папку notebooks, запускаємо скрипт, і повертаємось
+            cd notebooks
+            python3 "${{ matrix.module }}.ipynb.py"
+            cd ..
+          fi
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts-${{ matrix.module }}-local
+          path: artifacts/${{ matrix.module }}
