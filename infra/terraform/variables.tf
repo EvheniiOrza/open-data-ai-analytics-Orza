@@ -1,6 +1,6 @@
 variable "resource_group_location" {
   type        = string
-  default     = "westeurope"
+  default     = "northeurope"
   description = "Локація для всіх ресурсів у Azure."
 }
 
@@ -12,7 +12,7 @@ variable "resource_prefix" {
 
 variable "vm_size" {
   type        = string
-  default     = "Standard_B1s"
+  default     = "Standard_B1ms"
   description = "Розмір віртуальної машини."
 }
 
